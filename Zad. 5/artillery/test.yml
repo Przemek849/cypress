@@ -1,0 +1,24 @@
+config:
+  target: "http://httpbin.org/"
+  phases:
+    - duration: 2
+      arrivalRate: 5
+      name: Artillery test
+
+scenarios:
+  - name: Getting a resource
+    flow:
+      - get:
+          url: "{{ target }}get"
+      - post:
+          url: "{{ target }}post"
+          json:
+            username: "Test User"
+            password: "Temp Password"
+          capture:
+            - json: "$.json"
+              as: "request_body"
+            - json: "$.headers.Host"
+              as: "host"
+      - log: "Json value from response is: {{request_body}}"
+      - log: "Host value from response is: {{host}}"
